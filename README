@@ -1,49 +1,73 @@
-    Sparse Affinity Propagation (SAP) for large data (sparse affinity/similarity matrix)
-    
-    Parameters
-    ----------------------
-    X: coo_matrix,csr_matrix,lil_matrix, precomputed sparse affinity/similarity matrix
-        (affinity/similarity could be cosine, pearson, euclidean distance, or others).
-        Please note that affinity/similarity matrix doesn't need to be symmetric, s(A,B) can be different from s(B,A).
-        In fact it could be that s(A,B) exist and s(B,A) not exist in the sparse affinity/similarity matrix
-    
-    preference: a numeric scalar(float), or a str of 'min'/'median', or a list/numpy 1D array(length of samples)
-        the preference of a datapoint K, p(K), which will set to the affinity/similarity matrix s(K,K), is the 
-        priori suitability of datapoint K to serve as an exemplar (cluster center), Higher values of preference will lead to more exemplars (cluster centers).
-        A good initial choice is minimum('min') or median('median') of the full dense affinity/similarity matrix.
-        Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix,
-        which is top of the full dense affinity/similarity matrix, is not a good choice.  
-    
-    convergence_iter: int, optional, default: 15. Number of iterations with no change or change less than 1.0-convergence_percentage 
-        in exemplars (cluster centers) label of datapoint.
-    
-    convergence_percentage int, optional, default: 0.999999, 
-        That is different exemplars (cluster centers) label for one or less datapoint in 1 million datapoints will be considered as convergence.
-        This parameter is added because FSAPC is designed to deal with large data.
-    
-    max_iter: int, optional, default: 2000
-        Maximum number of iterations. Try to increase max_iter if FSAPC is not convergence yet at max_iter.
-    
-    damping: float, optional, default: 0.9.
-        Damping factor should between 0.5 and 1.
-    
-    verboseIter: int/None, default: 100
-        The level of verbose. if set to 0 or None, no verbose; 
-        If set to 1 for each verboseIter, print the status.
-        If set to 100, for each 100 iterations, print current status
-        
-    parallel: boolean, default: True
-        Turn on cython multiprocessing or not. It is recommended to set it True for speed up.
+python package for Sparse Affinity Propagation (SAP) Clustering. Designed for large data set using scipy sparse matrix(affinity/similarity matrix). Speed optimized with cython.
 
-    Attributes
-    ----------------
-    exemplars_: the cluster centers for each datapoint
-        The index(row index of matrix) of examplers(cluster centers) for each datapoint 
+Install from src:
+Download and unzip source files,
+python setup.py install
 
-    Notes
-    ---------------
-    Run example in test_sap.py
+Install from pip:
+pip install pysapc
+
+Install from Conda:
+conda install -c https://conda.anaconda.org/bioinfocao pysapc
+
+
+To test installation:
+from pysapc import tests
+tests.testDense()
+tests.testSparse()
+
+Use pysapc to cluster sparse similarity matrix (scipy sparse matrix):
+from pysapc import SAP
+sap=SAP(preference,convergence_iter=convergence_iter,max_iter=max_iter,damping=damping,verboseIter=100)
+sap_exemplars=sap_sparse.fit_predict(sparse_similarity_matrix)
+
+
+Sparse Affinity Propagation (SAP) for large data (sparse affinity/similarity matrix)
+
+Parameters
+----------------------
+X: coo_matrix,csr_matrix,lil_matrix, precomputed sparse affinity/similarity matrix
+    (affinity/similarity could be cosine, pearson, euclidean distance, or others).
+    Please note that affinity/similarity matrix doesn't need to be symmetric, s(A,B) can be different from s(B,A).
+    In fact it could be that s(A,B) exist and s(B,A) not exist in the sparse affinity/similarity matrix
+
+preference: a numeric scalar(float), or a str of 'min'/'median', or a list/numpy 1D array(length of samples)
+    the preference of a datapoint K, p(K), which will set to the affinity/similarity matrix s(K,K), is the 
+    priori suitability of datapoint K to serve as an exemplar (cluster center), Higher values of preference will lead to more exemplars (cluster centers).
+    A good initial choice is minimum('min') or median('median') of the full dense affinity/similarity matrix.
+    Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix,
+    which is top of the full dense affinity/similarity matrix, is not a good choice.  
+
+convergence_iter: int, optional, default: 15. Number of iterations with no change or change less than 1.0-convergence_percentage 
+    in exemplars (cluster centers) label of datapoint.
+
+convergence_percentage int, optional, default: 0.999999, 
+    That is different exemplars (cluster centers) label for one or less datapoint in 1 million datapoints will be considered as convergence.
+    This parameter is added because FSAPC is designed to deal with large data.
+
+max_iter: int, optional, default: 2000
+    Maximum number of iterations. Try to increase max_iter if FSAPC is not convergence yet at max_iter.
+
+damping: float, optional, default: 0.9.
+    Damping factor should between 0.5 and 1.
+
+verboseIter: int/None, default: 100
+    The level of verbose. if set to 0 or None, no verbose; 
+    If set to 1 for each verboseIter, print the status.
+    If set to 100, for each 100 iterations, print current status
     
-    References
-    ----------------
-    Brendan J. Frey and Delbert Dueck, "Clustering by Passing Messages Between Data Points", Science Feb. 2007
+parallel: boolean, default: True
+    Turn on cython multiprocessing or not. It is recommended to set it True for speed up.
+
+Attributes
+----------------
+exemplars_: the cluster centers for each datapoint
+    The index(row index of matrix) of examplers(cluster centers) for each datapoint 
+
+Notes
+---------------
+Run example in test_sap.py
+
+References
+----------------
+Brendan J. Frey and Delbert Dueck, "Clustering by Passing Messages Between Data Points", Science Feb. 2007
