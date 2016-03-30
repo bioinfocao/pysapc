@@ -19,7 +19,7 @@ tests.testSparse()
 Use pysapc to cluster sparse similarity matrix (scipy sparse matrix):
 from pysapc import SAP
 sap=SAP(preference,convergence_iter=convergence_iter,max_iter=max_iter,damping=damping,verboseIter=100)
-sap_exemplars=sap_sparse.fit_predict(sparse_similarity_matrix)
+sap_exemplars=sap_sparse.fit_predict(X) # X should be a scipy sparse similarity matrix
 
 
 Sparse Affinity Propagation (SAP) for large data (sparse affinity/similarity matrix)
