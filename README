@@ -69,6 +69,7 @@ exemplars_: the cluster centers for each datapoint, same length of samples.
 Notes
 ---------------
 Run example in test_sap.py
+To prepare sparse matrix, either use a single cutoff for all samples (for example keep top 20 percent of full matrix) or use different cutoff values for each samples so that each samples have K nearest neighbors. Users are recommended to try several sparse matrix and compare their clustering result to determine when the clustering result reach plateau (when including more data do not change clustering result significantly) 
 
 
 References
