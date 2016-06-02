@@ -1,7 +1,11 @@
-python package for Sparse Affinity Propagation (SAP) Clustering. Designed for large data set using scipy sparse matrix(affinity/similarity matrix). Speed optimized with cython.
+python package for Sparse Affinity Propagation (SAP) Clustering method. 
+Affinity propagation (AP) is a relatively new clustering algorithm that has been introduced by Brendan J. Frey and Delbert Dueck. Compared with classical clustering methods such as k-means, AP has several advantages such as a lower clustering error, automatic determination of number of clusters, identification of exemplars (cluster centers), support of similarities that are not symmetric and deterministic clustering result (k-means clustering result depends on initialization, and hence requires multiple runs to achieves global optimization). Instead of full similarity matrix, pySAPC can take scipy sparse matrix(affinity/similarity matrix). pySAPC will be useful in case when full similarity matrix can not fit in memory. Speed and memory optimized with cython.
 
-Install from src:
-Download and unzip source files,
+
+Installation:
+
+Install from source:
+Download and unzip source files and install as:
 python setup.py install
 
 Install from pip:
@@ -10,50 +14,48 @@ pip install pysapc
 Install from Conda:
 conda install -c https://conda.anaconda.org/bioinfocao pysapc
 
-
-To test installation:
+To test installation, in python shell, run:
 from pysapc import tests
 tests.testDense()
 tests.testSparse()
 
+Quick Start:
+
 Use pysapc to cluster sparse similarity matrix (scipy sparse matrix):
 from pysapc import SAP
 sap=SAP(preference,convergence_iter=convergence_iter,max_iter=max_iter,damping=damping,verboseIter=100)
-sap_exemplars=sap_sparse.fit_predict(X) # X should be a scipy sparse similarity matrix
+sap_exemplars=sap.fit_predict(X) # X should be a scipy sparse similarity matrix
 
 
-Sparse Affinity Propagation (SAP) for large data (sparse affinity/similarity matrix)
-
-Parameters
+Parameters:
 ----------------------
-X: coo_matrix,csr_matrix,lil_matrix, precomputed sparse affinity/similarity matrix
+X: precomputed sparse affinity/similarity matrix in scipy coo_matrix,csr_matrix or lil_matrix format
     (affinity/similarity could be cosine, pearson, euclidean distance, or others).
     Please note that affinity/similarity matrix doesn't need to be symmetric, s(A,B) can be different from s(B,A).
-    In fact it could be that s(A,B) exist and s(B,A) not exist in the sparse affinity/similarity matrix
+    In fact it could be that s(A,B) exist while s(B,A) not exist in the sparse affinity/similarity matrix
 
 preference: a numeric scalar(float), or a str of 'min'/'median', or a list/numpy 1D array(length of samples)
     the preference of a datapoint K, p(K), which will set to the affinity/similarity matrix s(K,K), is the 
     priori suitability of datapoint K to serve as an exemplar (cluster center), Higher values of preference will lead to more exemplars (cluster centers).
     A good initial choice is minimum('min') or median('median') of the full dense affinity/similarity matrix.
-    Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix,
-    which is top of the full dense affinity/similarity matrix, is not a good choice.  
+    Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix is not recommended.
 
 convergence_iter: int, optional, default: 15. Number of iterations with no change or change less than 1.0-convergence_percentage 
     in exemplars (cluster centers) label of datapoint.
 
-convergence_percentage int, optional, default: 0.999999, 
-    That is different exemplars (cluster centers) label for one or less datapoint in 1 million datapoints will be considered as convergence.
-    This parameter is added because FSAPC is designed to deal with large data.
+convergence_percentage: float, optional, default: 0.999999, 
+    This parameter is used to define convergence condition. If set as 0.999999, then one or less out of 1 million datapoints does not change their exemplars (cluster centers) will be considered as convergence.
+    This parameter is added because pySAPC is designed to deal with large data.
 
 max_iter: int, optional, default: 2000
-    Maximum number of iterations. Try to increase max_iter if FSAPC is not convergence yet at max_iter.
+    Maximum number of iterations. Try to increase max_iter if pySAPC is not convergence yet at max_iter.
 
 damping: float, optional, default: 0.9.
-    Damping factor should between 0.5 and 1.
+    Damping factor, should between 0.5 and 1.
 
-verboseIter: int/None, default: 100
-    The level of verbose. if set to 0 or None, no verbose; 
-    If set to 1 for each verboseIter, print the status.
+verboseIter: int or None, default: 100
+    The level of verbose. if set to 0 or None, no verbose output; 
+    If set to 1, print the status for each interation.
     If set to 100, for each 100 iterations, print current status
     
 parallel: boolean, default: True
@@ -61,12 +63,13 @@ parallel: boolean, default: True
 
 Attributes
 ----------------
-exemplars_: the cluster centers for each datapoint
+exemplars_: the cluster centers for each datapoint, same length of samples.
     The index(row index of matrix) of examplers(cluster centers) for each datapoint 
 
 Notes
 ---------------
 Run example in test_sap.py
+
 
 References
 ----------------
