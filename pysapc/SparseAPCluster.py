@@ -127,30 +127,30 @@ def sparseAffinityPropagation(row_array,col_array,data_array,\
         the preference of a datapoint K, p(K), which will set to the affinity/similarity matrix s(K,K), is the 
         priori suitability of datapoint K to serve as an exemplar (cluster center), Higher values of preference will lead to more exemplars (cluster centers).
         A good initial choice is minimum('min') or median('median') of the full dense affinity/similarity matrix.
-        Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix,
-        which is top of the full dense affinity/similarity matrix, is not a good choice.  
+        Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix is not recommended. 
     
     convergence_iter: int, optional, default: 15. Number of iterations with no change or change less than 1.0-convergence_percentage 
         in exemplars (cluster centers) label of datapoint.
     
-    convergence_percentage int, optional, default: 0.999999, 
-        That is different exemplars (cluster centers) label for one or less datapoint in 1 million datapoints will be considered as convergence.
-        This parameter is added because FSAPC is designed to deal with large data.
+    convergence_percentage: float, optional, default: 0.999999, 
+        This parameter is used to define convergence condition. 
+        If set as 0.999999, then one or less out of 1 million datapoints does not change their exemplars (cluster centers) will be considered as convergence.
+        This parameter is added because pySAPC is designed to deal with large data.
     
-    max_iter: int, optional, default: 200
+    max_iter: int, optional, default: 2000
         Maximum number of iterations. Try to increase max_iter if FSAPC is not convergence yet at max_iter.
     
     damping: float, optional, default: 0.9.
         Damping factor should between 0.5 and 1.
     
     verboseIter: int/None, default: 100
-        The level of verbose. if set to 0 or None, no verbose; 
-        If set to 1 for each verboseIter, print the status.
+        The level of verbose. if set to 0 or None, do not print verbose output; 
+        If set to 1, print the status for each interation.
         If set to 100, for each 100 iterations, print current status
         
     parallel: boolean, default: True
         Turn on cython multiprocessing or not. It is recommended to set it True for speed up.
-
+        
     Returns
     ----------------------
     The exemplars (cluster centers) for each datapoint. Exemplars are index(row index of matrix) of cluster centers for each datapoint.
@@ -253,6 +253,18 @@ class SAP():
     """
     Sparse Affinity Propagation (SAP) for large data (sparse affinity/similarity matrix)
     
+    To test installation, in python shell, run:
+    from pysapc import tests
+    tests.testDense()
+    tests.testSparse()
+    
+    Quick Start:
+    Use pysapc to cluster sparse similarity matrix (scipy sparse matrix):
+    from pysapc import SAP
+    sap=SAP(preference,convergence_iter=convergence_iter,max_iter=max_iter,damping=damping,verboseIter=100)
+    sap_exemplars=sap.fit_predict(X) # X should be a scipy sparse similarity matrix
+
+    
     Parameters
     ----------------------
     X: coo_matrix,csr_matrix,lil_matrix, precomputed sparse affinity/similarity matrix
@@ -264,15 +276,15 @@ class SAP():
         the preference of a datapoint K, p(K), which will set to the affinity/similarity matrix s(K,K), is the 
         priori suitability of datapoint K to serve as an exemplar (cluster center), Higher values of preference will lead to more exemplars (cluster centers).
         A good initial choice is minimum('min') or median('median') of the full dense affinity/similarity matrix.
-        Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix,
-        which is top of the full dense affinity/similarity matrix, is not a good choice.  
+        Plsease note that minimum('min') or median('median') of sparse affinity/similarity matrix is not recommended. 
     
     convergence_iter: int, optional, default: 15. Number of iterations with no change or change less than 1.0-convergence_percentage 
         in exemplars (cluster centers) label of datapoint.
     
-    convergence_percentage int, optional, default: 0.999999, 
-        That is different exemplars (cluster centers) label for one or less datapoint in 1 million datapoints will be considered as convergence.
-        This parameter is added because FSAPC is designed to deal with large data.
+    convergence_percentage: float, optional, default: 0.999999, 
+        This parameter is used to define convergence condition. 
+        If set as 0.999999, then one or less out of 1 million datapoints does not change their exemplars (cluster centers) will be considered as convergence.
+        This parameter is added because pySAPC is designed to deal with large data.
     
     max_iter: int, optional, default: 2000
         Maximum number of iterations. Try to increase max_iter if FSAPC is not convergence yet at max_iter.
@@ -281,8 +293,8 @@ class SAP():
         Damping factor should between 0.5 and 1.
     
     verboseIter: int/None, default: 100
-        The level of verbose. if set to 0 or None, no verbose; 
-        If set to 1 for each verboseIter, print the status.
+        The level of verbose. if set to 0 or None, do not print verbose output; 
+        If set to 1, print the status for each interation.
         If set to 100, for each 100 iterations, print current status
         
     parallel: boolean, default: True
@@ -295,7 +307,10 @@ class SAP():
 
     Notes
     ---------------
-    Run example in test_fsapc.py
+    To prepare sparse matrix, either use a single cutoff for all samples (for example keep top 20 percent of full matrix) 
+    or use different cutoff values for each samples so that each samples have K nearest neighbors. 
+    Users are recommended to try several sparse matrix and compare their clustering result to determine 
+    when the clustering result reach plateau (when including more data do not change clustering result significantly)
     
     References
     ----------------
