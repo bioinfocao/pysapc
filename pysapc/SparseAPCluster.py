@@ -9,8 +9,9 @@ Speed optimized with cython
 import numpy as np
 from datetime import datetime
 from scipy.sparse import coo_matrix,csr_matrix,lil_matrix
-import sparseAP_cy # cython for calculation speed optimization
+#from . import sparseAP_cy # cython for calculation speed optimization
 import sparseMatrixPrepare
+from sparseMatrixPrepare import sparseAP_cy
 
 #########################################################################
 
@@ -88,24 +89,24 @@ def getPreferenceList(preference,nSamplesOri,data_array):
     Return preference list(same length as samples)
     """
     # numeric value
-    if isinstance(preference, float) or isinstance(preference, int) or isinstance(preference, long):
+    if isinstance(preference, float) or isinstance(preference, int):
         preference_list=[float(preference)]*nSamplesOri
     # str/unicode min/mean
-    elif isinstance(preference, basestring):
+    elif isinstance(preference, str):
         if str(preference)=='min':
             preference=data_array.min()
         elif str(preference)=='median':
             preference=np.median(data_array)
         else: #other string
             raise ValueError("Preference should be a numeric scalar, or a string of 'min' / 'median',\
-            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(prefernce)))
+            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(preference)))
         preference_list=[preference]*nSamplesOri
     # list or numpy array
     elif (isinstance(preference, list) or isinstance(preference, np.ndarray)) and len(preference)==nSamplesOri: 
         preference_list=preference
     else:
         raise ValueError("Preference should be a numeric scalar, or a str of 'min' / 'median',\
-        or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(prefernce)))
+        or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(preference)))
     return preference_list
 
 
@@ -395,7 +396,7 @@ class SAP():
         """
         if (self.preference is None) and (preference is None):
             raise ValueError("Preference should be a numeric scalar, or a string of 'min' / 'median',\
-            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(prefernce)))
+            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(preference)))
         if preference is not None:
             preference_input=preference
         else:
@@ -431,7 +432,7 @@ class SAP():
         """
         if (self.preference is None) and (preference is None):
             raise ValueError("Preference should be a numeric scalar, or a string of 'min' / 'median',\
-            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(prefernce)))
+            or a list/np 1D array(length of samples).\n Your input preference is: {0})".format(str(preference)))
         if preference is not None:
             preference_input=preference
         else:
