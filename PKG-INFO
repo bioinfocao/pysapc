@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: pysapc
-Version: 1.0.0
+Version: 1.2.0
 Summary: Sparse Affinity Propagation Clustering
 Home-page: https://github.com/bioinfocao/pysapc
 Author: Huojun Cao
