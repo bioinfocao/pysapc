@@ -12,9 +12,8 @@ import os
 from scipy.sparse import coo_matrix,csr_matrix,lil_matrix
 from datetime import datetime
 from sklearn.cluster import AffinityPropagation
-#from SparseAPCluster import SAP
-from pysapc import SAP
-from pysapc import sparseAP_cy # cython for calculation speed optimization
+from SparseAPCluster import SAP
+from SparseAPCluster import sparseAP_cy
 
 ##################################################################################
 
@@ -24,7 +23,7 @@ def loadMatrix(data_file, dataCutoff=None):
     if dataCutoff is not None, all value (affinity/similarity) below this will be discarded
     """
     #print('{0}, loading data'.format(datetime.now()))
-    simi=pd.DataFrame.from_csv(data_file,sep='\t',index_col=None)
+    simi=pd.read_csv(data_file,sep='\t',index_col=None)
     samples=sorted(list(set(simi.row) | set(simi.col)))
     samplesInd={el:ind for ind,el in enumerate(samples)}
     row,col,data=simi.row.map(lambda x:samplesInd[x]),simi.col.map(lambda x:samplesInd[x]),simi.data
@@ -118,3 +117,10 @@ def testSparse():
         exemplars_similarity=clusterSimilarityWithDenseMatrix(data_file=dense_similarity_matrix_file,cutoff=cutoff,damping=0.9,max_iter=500,convergence_iter=15,preference='min')
         print("Exemplar label similarity between dense and sparse (data above: {0}) SAP is: {1}".format(cutoff,exemplars_similarity))    
     
+if __name__=="__main__":
+    
+    # test dense
+    testDense()
+    
+    # test sparse
+    testSparse()
