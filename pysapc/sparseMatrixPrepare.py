@@ -26,7 +26,7 @@ def copySym(rowBased_row_array,rowBased_col_array,rowBased_data_array,singleRowI
     df = pd.DataFrame(zip(copy_row_array,copy_col_array,copy_data_array), columns=['row', 'col', 'data'])
     copy_row_list,copy_col_list,copy_data_list=[],[],[]
     for ind in singleRowInds:
-        copyData=df[(df.col==ind) & (df.row!=ind)].sort(['data']).copy()
+        copyData=df[(df.col==ind) & (df.row!=ind)].sort_values(['data']).copy()
         copyData_min=copyData[0:1]
         copy_row_list+=list(copyData_min.col)
         copy_col_list+=list(copyData_min.row)
